@@ -1,15 +1,65 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Cache the inverse of a matrix and use the cache when the original matrix matches
 
-## Write a short comment describing this function
+
+##  Creates a special "matrix" object that can cache its inverse.
 
 makeCacheMatrix <- function(x = matrix()) {
-
+    # Returns a list containing functions to access input matrix and cache
+    
+    originalMatrix <- NULL
+    inverseMatrix <- NULL
+    
+    # The methods to set/get the input matrix
+    set <- function(y) {
+        x <<- y
+        originalMatrix <- NULL
+        inverseMatrix <<- NULL
+    }
+    
+    get <- function() x
+    
+    # The methods to set/get orginal  matrix that is that is related to the inverse matrix
+    setOriginalMatrix <- function(m) originalMatrix <<- m
+    getOriginalMatrix <- function() originalMatrix
+    
+    # The methods to set/get inverse matrix
+    setInverseMatrix <- function(m) inverseMatrix <<- m
+    getInverseMatrix <- function() inverseMatrix
+    
+    # Returns the methods as a list
+    list(set = set, get = get,
+         
+         setOriginalMatrix= setOriginalMatrix,
+         getOriginalMatrix = getOriginalMatrix,
+         
+         setInverseMatrix = setInverseMatrix,
+         getInverseMatrix = getInverseMatrix)
 }
 
 
-## Write a short comment describing this function
+## Gets the inverse from the cache or computes the inverse on the spot.
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+    # Returns a matrix that is the inverse of 'x'
+    
+    inputMatrix = x$get()
+    originalMatrix = x$getOriginalMatrix()
+    
+    # Check if the input matrix has been changed and if its inverse has been cached
+    if(identical(inputMatrix, originalMatrix)) {
+        inverseMatrix <- x$getInverseMatrix()
+        
+        if(!is.null(inverseMatrix)) {
+            return(inverseMatrix)
+        }
+    }
+    
+    # Calculate the reverse matrix
+    inverseMatrix <- solve(inputMatrix, ...)
+
+    # Cache the result
+    x$setOriginalMatrix(inputMatrix)
+    x$setInverseMatrix(inverseMatrix)
+    
+    inverseMatrix   
 }
