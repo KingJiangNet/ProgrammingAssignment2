@@ -6,6 +6,7 @@
 makeCacheMatrix <- function(x = matrix()) {
     # Returns a list containing functions to access input matrix and cache
     
+    # The orginal-inverse matrix pair
     originalMatrix <- NULL
     inverseMatrix <- NULL
     
@@ -18,7 +19,7 @@ makeCacheMatrix <- function(x = matrix()) {
     
     get <- function() x
     
-    # The methods to set/get orginal  matrix that is that is related to the inverse matrix
+    # The methods to set/get orginal  matrix that is related to the inverse matrix
     setOriginalMatrix <- function(m) originalMatrix <<- m
     getOriginalMatrix <- function() originalMatrix
     
@@ -45,7 +46,7 @@ cacheSolve <- function(x, ...) {
     inputMatrix = x$get()
     originalMatrix = x$getOriginalMatrix()
     
-    # Check if the input matrix has been changed and if its inverse has been cached
+    # Checks if the input matrix has been changed and if its inverse has been cached
     if(identical(inputMatrix, originalMatrix)) {
         inverseMatrix <- x$getInverseMatrix()
         
@@ -54,10 +55,10 @@ cacheSolve <- function(x, ...) {
         }
     }
     
-    # Calculate the reverse matrix
+    # Computes the reverse matrix
     inverseMatrix <- solve(inputMatrix, ...)
 
-    # Cache the result
+    # Caches the result
     x$setOriginalMatrix(inputMatrix)
     x$setInverseMatrix(inverseMatrix)
     
